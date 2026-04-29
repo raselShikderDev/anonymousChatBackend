@@ -12,9 +12,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   // client    — general purpose (get/set/hset/hlen/del)
   // pubClient — publish only, never subscribe
   // subClient — psubscribe only, never publish
-  public client: Redis;
-  public pubClient: Redis;
-  public subClient: Redis;
+  public client: Redis = new Redis;
+  public pubClient: Redis = new Redis;
+  public subClient: Redis = new Redis;
 
   constructor(private readonly configService: ConfigService) {}
 
