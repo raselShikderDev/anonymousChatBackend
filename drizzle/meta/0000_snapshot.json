@@ -1,0 +1,74 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": { "name": "id", "type": "varchar(50)", "primaryKey": true, "notNull": true },
+        "username": { "name": "username", "type": "varchar(24)", "notNull": true, "isUnique": true },
+        "created_at": { "name": "created_at", "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "rooms": {
+      "name": "rooms",
+      "schema": "",
+      "columns": {
+        "id": { "name": "id", "type": "varchar(50)", "primaryKey": true, "notNull": true },
+        "name": { "name": "name", "type": "varchar(32)", "notNull": true, "isUnique": true },
+        "created_by": { "name": "created_by", "type": "varchar(24)", "notNull": true },
+        "created_at": { "name": "created_at", "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": { "name": "id", "type": "varchar(50)", "primaryKey": true, "notNull": true },
+        "room_id": { "name": "room_id", "type": "varchar(50)", "notNull": true },
+        "username": { "name": "username", "type": "varchar(24)", "notNull": true },
+        "content": { "name": "content", "type": "text", "notNull": true },
+        "created_at": { "name": "created_at", "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "idx_messages_room_id": {
+          "name": "idx_messages_room_id",
+          "columns": ["room_id"],
+          "isUnique": false
+        },
+        "idx_messages_created_at": {
+          "name": "idx_messages_created_at",
+          "columns": ["created_at"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "messages_room_id_rooms_id_fk": {
+          "name": "messages_room_id_rooms_id_fk",
+          "tableFrom": "messages",
+          "tableTo": "rooms",
+          "columnsFrom": ["room_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": { "schemas": {}, "tables": {}, "columns": {} }
+}
