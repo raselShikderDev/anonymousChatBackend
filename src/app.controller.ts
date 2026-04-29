@@ -39,4 +39,9 @@ export class AppController {
       </html>
     `);
   }
+
+  @Get('/health')
+health() {
+  return { status: 'ok' };
+}
 }

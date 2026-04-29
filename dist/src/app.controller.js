@@ -52,6 +52,9 @@ let AppController = class AppController {
       </html>
     `);
     }
+    health() {
+        return { status: 'ok' };
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -61,6 +64,12 @@ __decorate([
     __metadata("design:paramtypes", [typeof (_a = typeof express_1.Response !== "undefined" && express_1.Response) === "function" ? _a : Object]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "root", null);
+__decorate([
+    (0, common_1.Get)('/health'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "health", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)()
 ], AppController);

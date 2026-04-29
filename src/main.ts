@@ -10,7 +10,6 @@ import { IoAdapter } from '@nestjs/platform-socket.io'; //
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // THIS LINE FIXES YOUR ISSUE
   app.useWebSocketAdapter(new IoAdapter(app));
 
   app.setGlobalPrefix('api/v1', {
