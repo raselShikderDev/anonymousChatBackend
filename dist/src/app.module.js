@@ -15,11 +15,13 @@ const auth_module_1 = require("./auth/auth.module");
 const rooms_module_1 = require("./rooms/rooms.module");
 const messages_module_1 = require("./messages/messages.module");
 const gateway_module_1 = require("./gateway/gateway.module");
+const app_controller_1 = require("./app.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
+        controllers: [app_controller_1.AppController],
         imports: [
             config_module_1.ConfigModule,
             database_module_1.DatabaseModule,

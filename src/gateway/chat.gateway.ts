@@ -13,7 +13,8 @@ import { RedisService } from '../redis/redis.service';
 import { RoomsService } from '../rooms/rooms.service';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
-@WebSocketGateway({ namespace: '/chat', cors: { origin: '*' } })
+// @WebSocketGateway({ namespace: '/chat', cors: { origin: '*' } })
+@WebSocketGateway({ cors: { origin: '*' } })
 @Injectable()
 export class ChatGateway
   implements
@@ -74,21 +75,20 @@ export class ChatGateway
     );
   }
   
-async afterInit(server: Server) {
-  // ✅ wait for Redis to be ready
+async afterInit() {
   while (!this.redisService.isReady) {
     await new Promise((res) => setTimeout(res, 50));
   }
- // Duplicate connections so the adapter's internal sub channel
-    // does not interfere with our pmessage listener on subClient
+
+  console.log("In line 82 at chat.gateway", this.redisService.pubClient.duplicate());
   const pubClient = this.redisService.pubClient.duplicate();
+  
   const subClient = this.redisService.subClient.duplicate();
 
-  server.adapter(createAdapter(pubClient, subClient));
+  this.server.adapter(createAdapter(pubClient, subClient)); // ✅ FIX
 
   console.log('✅ Redis adapter connected');
 }
-
   // afterInit(server: Server) {
   //   // Duplicate connections so the adapter's internal sub channel
   //   // does not interfere with our pmessage listener on subClient
