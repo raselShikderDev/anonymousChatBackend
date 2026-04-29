@@ -23,14 +23,14 @@ export class ChatGateway
     OnModuleInit
 {
   @WebSocketServer()
-  server: Server;
+  server!: Server;
 
   constructor(
     private readonly redisService: RedisService,
     private readonly roomsService: RoomsService,
   ) {}
 
-  // ── Redis pub/sub fan-out ─────────────────────────────────────────────────
+  // ── Redis pub/sub fan-out ──
   // onModuleInit wires up the pmessage listener on the dedicated subClient.
   // afterInit wires the Socket.io Redis adapter using duplicate connections
   // so pub/sub channels never collide with the adapter's internal channels.
@@ -73,16 +73,31 @@ export class ChatGateway
       },
     );
   }
-
-  afterInit(server: Server) {
-    // Duplicate connections so the adapter's internal sub channel
-    // does not interfere with our pmessage listener on subClient
-    const pubClient = this.redisService.pubClient.duplicate();
-    const subClient = this.redisService.pubClient.duplicate();
-    server.adapter(createAdapter(pubClient, subClient));
+  
+async afterInit(server: Server) {
+  // ✅ wait for Redis to be ready
+  while (!this.redisService.isReady) {
+    await new Promise((res) => setTimeout(res, 50));
   }
+ // Duplicate connections so the adapter's internal sub channel
+    // does not interfere with our pmessage listener on subClient
+  const pubClient = this.redisService.pubClient.duplicate();
+  const subClient = this.redisService.subClient.duplicate();
 
-  // ── Connection ────────────────────────────────────────────────────────────
+  server.adapter(createAdapter(pubClient, subClient));
+
+  console.log('✅ Redis adapter connected');
+}
+
+  // afterInit(server: Server) {
+  //   // Duplicate connections so the adapter's internal sub channel
+  //   // does not interfere with our pmessage listener on subClient
+  //   const pubClient = this.redisService.pubClient.duplicate();
+  //   const subClient = this.redisService.pubClient.duplicate();
+  //   server.adapter(createAdapter(pubClient, subClient));
+  // }
+
+  // ── Connection ──
 
   async handleConnection(client: Socket) {
     const token = client.handshake.query.token as string;
@@ -148,13 +163,13 @@ export class ChatGateway
     });
   }
 
-  // ── Disconnection ─────────────────────────────────────────────────────────
+  // ── Disconnection ─────
 
   async handleDisconnect(client: Socket) {
     await this.cleanupClient(client);
   }
 
-  // ── Client → Server events ────────────────────────────────────────────────
+  // ── Client → Server events ───
 
   // Contract: room:leave — no payload, graceful disconnect
   @SubscribeMessage('room:leave')
@@ -163,7 +178,7 @@ export class ChatGateway
     client.disconnect(true);
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+  // ── Helpers ─────
 
   private async cleanupClient(client: Socket) {
     const state = await this.redisService.getSocketState(client.id);

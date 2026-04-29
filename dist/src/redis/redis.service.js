@@ -16,6 +16,7 @@ const config_service_1 = require("../config/config.service");
 let RedisService = class RedisService {
     constructor(configService) {
         this.configService = configService;
+        this.isReady = false;
     }
     async onModuleInit() {
         const url = this.configService.redisUrl;
@@ -36,6 +37,7 @@ let RedisService = class RedisService {
             new Promise((res) => this.pubClient.once('ready', res)),
             new Promise((res) => this.subClient.once('ready', res)),
         ]);
+        this.isReady = true;
         console.log('✅ Redis connected');
         await this.client.set('health', 'ok');
         const val = await this.client.get('health');

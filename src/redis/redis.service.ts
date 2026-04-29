@@ -17,6 +17,8 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 public pubClient!: Redis;
 public subClient!: Redis;
 
+ public isReady = false;
+
   constructor(private readonly configService: ConfigService) {}
 
   async onModuleInit() {
@@ -44,9 +46,11 @@ public subClient!: Redis;
       new Promise((res) => this.subClient.once('ready', res)),
     ]);
 
+     this.isReady = true; 
+
     console.log('✅ Redis connected');
 
-    // 🔥 Health check
+    // Health check
     await this.client.set('health', 'ok');
     const val = await this.client.get('health');
     console.log('Redis test:', val);

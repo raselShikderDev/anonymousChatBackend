@@ -9,7 +9,7 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     server: Server;
     constructor(redisService: RedisService, roomsService: RoomsService);
     onModuleInit(): void;
-    afterInit(server: Server): void;
+    afterInit(server: Server): Promise<void>;
     handleConnection(client: Socket): Promise<void>;
     handleDisconnect(client: Socket): Promise<void>;
     handleLeave(client: Socket): Promise<void>;

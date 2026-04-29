@@ -27,9 +27,9 @@ let DatabaseService = class DatabaseService {
         });
         this.db = (0, node_postgres_1.drizzle)(this.pool, { schema });
         await (0, migrator_1.migrate)(this.db, {
-            migrationsFolder: path.join(process.cwd(), 'drizzle'),
+            migrationsFolder: path.join(process.cwd(), "drizzle"),
         });
-        console.log('✅ Database connected & migrated');
+        console.log("✅ Database connected & migrated");
     }
     async onModuleDestroy() {
         await this.pool.end();
