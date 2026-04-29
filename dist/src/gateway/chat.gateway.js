@@ -50,11 +50,10 @@ let ChatGateway = class ChatGateway {
         while (!this.redisService.isReady) {
             await new Promise((res) => setTimeout(res, 50));
         }
-        console.log("In line 82 at chat.gateway", this.redisService.pubClient.duplicate());
         const pubClient = this.redisService.pubClient.duplicate();
         const subClient = this.redisService.subClient.duplicate();
         this.server.adapter((0, redis_adapter_1.createAdapter)(pubClient, subClient));
-        console.log('✅ Redis adapter connected');
+        console.log(' Redis adapter connected');
     }
     async handleConnection(client) {
         const token = client.handshake.query.token;

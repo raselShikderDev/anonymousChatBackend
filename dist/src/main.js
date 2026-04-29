@@ -9,7 +9,9 @@ const platform_socket_io_1 = require("@nestjs/platform-socket.io");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useWebSocketAdapter(new platform_socket_io_1.IoAdapter(app));
-    app.setGlobalPrefix('api/v1');
+    app.setGlobalPrefix('api/v1', {
+        exclude: ['/'],
+    });
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         transform: true,

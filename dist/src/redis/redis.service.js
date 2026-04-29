@@ -27,7 +27,7 @@ let RedisService = class RedisService {
         this.pubClient = new ioredis_1.default(url, options);
         this.subClient = new ioredis_1.default(url, options);
         const logError = (err) => {
-            console.error('❌ Redis Error:', err);
+            console.error(' Redis Error:', err);
         };
         this.client.on('error', logError);
         this.pubClient.on('error', logError);
@@ -38,7 +38,7 @@ let RedisService = class RedisService {
             new Promise((res) => this.subClient.once('ready', res)),
         ]);
         this.isReady = true;
-        console.log('✅ Redis connected');
+        console.log(' Redis connected');
         await this.client.set('health', 'ok');
         const val = await this.client.get('health');
         console.log('Redis test:', val);

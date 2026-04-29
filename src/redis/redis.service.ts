@@ -33,7 +33,7 @@ public subClient!: Redis;
     this.subClient = new Redis(url, options);
 
     const logError = (err: any) => {
-      console.error('❌ Redis Error:', err);
+      console.error(' Redis Error:', err);
     };
 
     this.client.on('error', logError);
@@ -48,7 +48,7 @@ public subClient!: Redis;
 
      this.isReady = true; 
 
-    console.log('✅ Redis connected');
+    console.log(' Redis connected');
 
     // Health check
     await this.client.set('health', 'ok');
@@ -62,8 +62,7 @@ public subClient!: Redis;
     await this.subClient.quit();
   }
 
-  // ── Session ─────────────────────────────────────────
-
+  // ── Session ───
   async setSession(token: string, data: SessionData): Promise<void> {
     await this.client.set(
       `session:${token}`,
@@ -82,8 +81,7 @@ public subClient!: Redis;
     await this.client.del(`session:${token}`);
   }
 
-  // ── Active users ───────────────────────────────────
-
+  // ── Active users ───
   async addActiveUser(
     roomId: string,
     username: string,
@@ -105,8 +103,7 @@ public subClient!: Redis;
     return this.client.hlen(`room:${roomId}:users`);
   }
 
-  // ── Socket state ───────────────────────────────────
-
+  // ── Socket state ───
   async setSocketState(
     socketId: string,
     data: { userId: string; username: string; roomId: string },
@@ -128,8 +125,7 @@ public subClient!: Redis;
     await this.client.del(`socket:${socketId}`);
   }
 
-  // ── Pub/Sub ────────────────────────────────────────
-
+  // ── Pub/Sub ────
   async publish(channel: string, message: string) {
     await this.pubClient.publish(channel, message);
   }

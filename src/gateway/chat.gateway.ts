@@ -80,24 +80,15 @@ async afterInit() {
     await new Promise((res) => setTimeout(res, 50));
   }
 
-  console.log("In line 82 at chat.gateway", this.redisService.pubClient.duplicate());
   const pubClient = this.redisService.pubClient.duplicate();
   
   const subClient = this.redisService.subClient.duplicate();
 
-  this.server.adapter(createAdapter(pubClient, subClient)); // ✅ FIX
+  this.server.adapter(createAdapter(pubClient, subClient)); 
 
-  console.log('✅ Redis adapter connected');
+  console.log(' Redis adapter connected');
 }
-  // afterInit(server: Server) {
-  //   // Duplicate connections so the adapter's internal sub channel
-  //   // does not interfere with our pmessage listener on subClient
-  //   const pubClient = this.redisService.pubClient.duplicate();
-  //   const subClient = this.redisService.pubClient.duplicate();
-  //   server.adapter(createAdapter(pubClient, subClient));
-  // }
-
-  // ── Connection ──
+  
 
   async handleConnection(client: Socket) {
     const token = client.handshake.query.token as string;
@@ -163,7 +154,7 @@ async afterInit() {
     });
   }
 
-  // ── Disconnection ─────
+  // ── Disconnection ──
 
   async handleDisconnect(client: Socket) {
     await this.cleanupClient(client);
