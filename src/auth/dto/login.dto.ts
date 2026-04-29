@@ -8,5 +8,5 @@ export class LoginDto {
     message:
       'username must contain only alphanumeric characters and underscores',
   })
-  username: string;
+  username!: string;
 }

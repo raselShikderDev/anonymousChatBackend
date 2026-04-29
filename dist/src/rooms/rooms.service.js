@@ -24,6 +24,9 @@ let RoomsService = class RoomsService {
     async findAll() {
         const db = this.databaseService.db;
         const allRooms = await db.select().from(schema_1.rooms);
+        console.log({
+            "All Rooms got": allRooms
+        });
         const roomsWithActiveUsers = await Promise.all(allRooms.map(async (room) => ({
             id: room.id,
             name: room.name,
