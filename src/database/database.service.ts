@@ -8,8 +8,8 @@ import * as path from 'path';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
-  public db: ReturnType<typeof drizzle<typeof schema>>;
-  private pool: Pool;
+  public db: ReturnType<typeof drizzle<typeof schema>> | undefined;
+  private pool!: Pool;
 
   constructor(private readonly configService: ConfigService) {}
 
