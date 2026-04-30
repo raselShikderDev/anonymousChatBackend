@@ -22,14 +22,23 @@ let DatabaseService = class DatabaseService {
         this.configService = configService;
     }
     async onModuleInit() {
+        const databaseUrl = this.configService.databaseUrl;
+        const isCloud = databaseUrl.includes("sslmode");
         this.pool = new pg_1.Pool({
-            connectionString: this.configService.databaseUrl,
+            connectionString: databaseUrl,
+            ssl: isCloud ? { rejectUnauthorized: false } : false,
         });
         this.db = (0, node_postgres_1.drizzle)(this.pool, { schema });
-        await (0, migrator_1.migrate)(this.db, {
-            migrationsFolder: path.join(process.cwd(), "drizzle"),
-        });
-        console.log("✅ Database connected & migrated");
+        try {
+            await (0, migrator_1.migrate)(this.db, {
+                migrationsFolder: path.join(process.cwd(), "drizzle"),
+            });
+            console.log(" Database connected & migrated");
+        }
+        catch (err) {
+            console.error(" Migration failed:", err);
+            throw err;
+        }
     }
     async onModuleDestroy() {
         await this.pool.end();
